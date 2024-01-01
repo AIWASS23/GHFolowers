@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class FollowerCell: UICollectionViewCell {
     static let reuseID = "FollowerCell"
@@ -23,11 +24,18 @@ class FollowerCell: UICollectionViewCell {
     }
     
     func set(follower: Follower) {
-        usernameLabel.text = follower.login
-        avatarImageView.downloadImage(from: follower.avatarUrl)
-    }
-    
+            if #available(iOS 16.0, *) {
+                contentConfiguration = UIHostingConfiguration { FollowerView(follower: follower) }
+            } else {
+                avatarImageView.image = Images.placeholder
+                avatarImageView.downloadImage(from: follower.avatarUrl)
+                usernameLabel.text = follower.login
+            }
+        }
+
     private func configure() {
+        contentView.addSubviews(avatarImageView, usernameLabel)
+
         addSubview(avatarImageView)
         addSubview(usernameLabel)
         
